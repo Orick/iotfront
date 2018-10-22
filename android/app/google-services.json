@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "529876220845",
+    "firebase_url": "https://iotbackend-ceb59.firebaseio.com",
+    "project_id": "iotbackend-ceb59",
+    "storage_bucket": "iotbackend-ceb59.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:529876220845:android:36188bb7b1e5512f",
+        "android_client_info": {
+          "package_name": "com.iotfront"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "529876220845-gb949n6fof27hg9ubjfmq32ni0lmt9o5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2lA8JUKal3NDYiRc8F_jhezHtrLb7QTM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
