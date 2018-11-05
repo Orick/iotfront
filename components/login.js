@@ -16,7 +16,7 @@ class Login extends Component {
             // modalVisibleRecordar: false,
             // modalVisibleCrear: false
         };
-        
+
         this.logear = this.logear.bind(this);
         this.desLogear = this.desLogear.bind(this);
         // this.mostrarRecordarContrasena = this.mostrarRecordarContrasena.bind(this);
@@ -27,7 +27,7 @@ class Login extends Component {
         firebase.auth().onAuthStateChanged((user) => {
             console.log(user);
             if(user){
-                this.setState({textUsuario:"",textPass:"",textLogin:""}); 
+                this.setState({textUsuario:"",textPass:"",textLogin:""});
                 //this.props.navigation.navigate('Main');
                 console.log('logeado');
             }else{
@@ -35,13 +35,21 @@ class Login extends Component {
             }
         });
     }
-    
+
     // mostrarRecordarContrasena(visible){
     //     this.setState({modalVisibleRecordar: visible});
     // }
     // mostrarCrearUsuario(visible){
     //     this.setState({modalVisibleCrear: visible});
     // }
+
+  async saveItem(item, selectedValue) {
+    try {
+      await AsyncStorage.setItem(item, selectedValue)
+    } catch (error) {
+      console.log('AsyncStorage error:' + error.message)
+    }
+  }
 
   logear(){
     console.log(this.state.email, this.state.pass);
@@ -50,14 +58,14 @@ class Login extends Component {
             this.setState({textUsuario:"",textPass:"",textLogin:"Cargando..."});
             firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.pass)
                 .then(goodLogin => {
-                    
+
                     goodLogin.user.reload();
                     goodLogin.user.getIdToken()
                         .then(Token => {
                             console.log('Token ->>>',Token);
-                            this.setState({textUsuario:"",textPass:"",textLogin:""}); 
-                            this.props.navigation.navigate('Main');
-                            
+                            this.saveItem('token', Token);
+                            this.props.navigation.navigate('App');
+
                         }).catch(function (error) {
                             console.log('error sacando token');
                             console.log('error: ', error);
@@ -100,9 +108,9 @@ class Login extends Component {
                 <Content style={styles.contenedorTexto}>
                 <Image source={require('./../src/img/email.png')} style={styles.emailPass}/>
                 <Item style={styles.item}>
-                    <Input 
+                    <Input
                         autoCorrect={false}
-                        placeholder="Usuario" 
+                        placeholder="Usuario"
                         style={styles.text}
                         onChangeText={(text) => this.setState({email:text})}
                     />
@@ -113,15 +121,15 @@ class Login extends Component {
                         <Text style={styles.textUsuario}>{this.state.textUsuario}</Text>
                     </Item>
                 </Content>
-                
+
                 <Content style={styles.contenedorTexto}>
                 <Image source={require('./../src/img/pass.png')} style={styles.emailPass}/>
                 <Item last style={styles.item}>
-                    <Input 
+                    <Input
                         style={styles.text}
-                        secureTextEntry={true} 
+                        secureTextEntry={true}
                         onChangeText={(text) => this.setState({pass:text})}
-                        placeholder="Contraseña" 
+                        placeholder="Contraseña"
                     >
                     </Input>
                 </Item>
@@ -141,17 +149,17 @@ class Login extends Component {
                     </Item>
             </Content>
             <Content style={{flex: 1}}>
-                <Button style={styles.crear} transparent light onPress={() => { 
-                    this.setState({textUsuario:"",textPass:"",textLogin:""}); 
-                    this.props.navigation.push('crearUsuario'); 
-                    
+                <Button style={styles.crear} transparent light onPress={() => {
+                    this.setState({textUsuario:"",textPass:"",textLogin:""});
+                    this.props.navigation.push('crearUsuario');
+
                     }}>
                     <Text>Crear Usuario</Text>
                 </Button>
 
-                <Button style={styles.recordar} transparent light onPress={() => { 
-                    this.setState({textUsuario:"",textPass:"",textLogin:""}); 
-                    this.props.navigation.push('recuperarContrasena'); 
+                <Button style={styles.recordar} transparent light onPress={() => {
+                    this.setState({textUsuario:"",textPass:"",textLogin:""});
+                    this.props.navigation.push('recuperarContrasena');
                     }}>
                     <Text>Recordar Contraseña</Text>
                 </Button>
@@ -171,7 +179,7 @@ class Login extends Component {
           transparent={false}
           visible={this.state.modalVisibleCrear}
           onRequestClose={() => {
-            
+
           }}>
           <Content style={{marginTop: 22}}>
               <Text>Crear USUARIO!</Text>
@@ -189,7 +197,7 @@ class Login extends Component {
           transparent={false}
           visible={this.state.modalVisibleRecordar}
           onRequestClose={() => {
-            
+
           }}>
           <Content style={{marginTop: 22}}>
               <Text>Recordar Contraseña!</Text>
@@ -241,7 +249,7 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         marginTop: 5,
         height: 40,
-        width: 40 
+        width: 40
     },
     text: {
         marginLeft: 50,
@@ -260,14 +268,14 @@ const styles = StyleSheet.create({
         marginBottom: 5
     },
     logo: {
-        height: 200, 
+        height: 200,
         width: 200,
         alignSelf: "center",
         marginTop: 50,
-        marginBottom: 20 
+        marginBottom: 20
     },
     fondo:{
-        height: 1000, 
+        height: 1000,
         flex:1,
         position:"absolute",
         transform: [
@@ -300,9 +308,9 @@ const styles = StyleSheet.create({
         fontSize: 15,
         paddingRight: 20,
         color:'white',
-        
+
     }
-    
+
 });
 
 export default Login;

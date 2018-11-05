@@ -1,13 +1,11 @@
-import React from 'react';
-import { Text, View } from 'react-native';
-import { createBottomTabNavigator } from 'react-navigation';
+import React, { Component } from 'react';
 
-import MapScreen from './src/screens/MapScreen';
-import FriendScreen from './src/screens/FriendScreen';
-import SettingScreen from './src/screens/SettingScreen';
+import Authe from './src/Authe';
 
-export default createBottomTabNavigator({
-    Mapa: MapScreen,
-    Amigos: FriendScreen,
-    Ajustes: SettingsScreen,
-});
+export default class App extends Component {
+  render() {
+      return(
+        <Authe />
+      );
+  }
+}
