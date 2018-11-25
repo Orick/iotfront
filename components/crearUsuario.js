@@ -100,7 +100,7 @@ class crearUsuario extends Component {
 
         </Form>
 
-        <Button rounded success style={styles.buttonLogin} onPress={() => {this.crearUsuario()} } >
+        <Button rounded primary style={styles.buttonLogin} onPress={() => {this.crearUsuario()} } >
             <Text>Crear Usuario</Text>
         </Button>
         <Content style={{alignSelf: 'center',height:20}}>
@@ -149,7 +149,7 @@ class crearUsuario extends Component {
  const styles = StyleSheet.create({
     contenedorTexto:{
         opacity: 0.8,
-        backgroundColor: '#32CD32',
+        backgroundColor: '#6A89FF',
         borderRadius: 25,
         marginLeft: 10,
         marginRight: 10,
@@ -159,7 +159,7 @@ class crearUsuario extends Component {
         marginLeft: 10,
         marginTop: 5,
         height: 40,
-        width: 40 
+        width: 40
     },
     text: {
         marginLeft: 50,
@@ -178,19 +178,18 @@ class crearUsuario extends Component {
         marginBottom: 5
     },
     logo: {
-        height: 200, 
+        height: 200,
         width: 200,
         alignSelf: "center",
         marginTop: 50,
-        marginBottom: 20 
+        marginBottom: 20
     },
     fondo:{
-        height: 1000, 
         flex:1,
         position:"absolute",
         transform: [
-            { translateX: -250 },
-            { translateY: -330 }
+            { translateX: -740 },
+            { translateY: -240 }
           ]
     },
     recordar:{
@@ -218,9 +217,8 @@ class crearUsuario extends Component {
         fontSize: 15,
         paddingRight: 20,
         color:'white',
-        
+
     }
-    
 });
 
 export default crearUsuario;
