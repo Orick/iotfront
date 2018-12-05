@@ -1,27 +1,26 @@
 import React, { Component } from 'react';
 import { StyleSheet, Image, Dimensions, Modal, TouchableOpacity } from 'react-native'
-import { Container, Content, Body, Text, Card, CardItem, List, ListItem, Right, Button, View } from 'native-base';
+import { Container, Content, Body, Text, Card, CardItem, List, ListItem, Form, Item, Input, Right, Button, View } from 'native-base';
 import firebase from 'react-native-firebase';
 import IbeaconMap from '../../components/IbeaconMap';
 
-
-
-
 const {width, height} = Dimensions.get('window');
 
-class MapScreen extends Component {
+class GroupsScreen extends Component {
   constructor(props){
     super(props);
     this.state = {
       groups : [],
       groupSelect : -1,
-      showModal: false
+      showModal: false,
+      modalVisible: false,
+      newGroup: "",
     };
     this.modalibeacon = this.modalibeacon.bind(this);
-    this.groupsList = this.groupsList.bind(this);  
-    this.cardlist = this.cardlist.bind(this);  
-    this.closeModal = this.closeModal.bind(this);  
-    
+    this.groupsList = this.groupsList.bind(this);
+    this.cardlist = this.cardlist.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+
   }
   componentWillMount(){
     this.groupsList()
@@ -43,11 +42,11 @@ class MapScreen extends Component {
       groupSelect:-1,
       showModal:false
     })
-    
+
   }
   groupsList() {
     firebase.auth().onAuthStateChanged((user) => {
-      if(user){        
+      if(user){
         user.getIdToken()
           .then(Token => {
               fetch('http://142.93.125.238:90/groups/getall',{
@@ -63,7 +62,7 @@ class MapScreen extends Component {
                       console.log("fetch error : ", error);
                       return [];
                   });
-              
+
           }).catch(function (error) {
               console.log('error sacando token');
               console.log('error: ', error);
@@ -93,7 +92,7 @@ class MapScreen extends Component {
                       <Image source={require('./../img/config.png')} style={{height:40,width:40}}/>
                   </TouchableOpacity>
                 </View>
-                
+
               </Right>
             </ListItem>
         )
@@ -102,18 +101,51 @@ class MapScreen extends Component {
       // <Card key={index} style={styles.cards}>
       //   <CardItem bordered button onPress={() => {this.modalibeacon(data.id)}}>
       //     <Body>
-      //       <Text style={styles.text}> {data.Nombre} </Text>  
+      //       <Text style={styles.text}> {data.Nombre} </Text>
       //     </Body>
       //   </CardItem>
       // </Card>
 
   }
 
+  toggleModal(visible) {
+      this.setState({ modalVisible: visible });
+  }
+
   render() {
     return (
       <Container>
+        <Modal animationType = {"slide"} transparent = {false}
+               visible = {this.state.modalVisible}
+               onRequestClose = {() => { console.log("Modal has been closed.") } }>
+
+               <View style = {styles.modal}>
+                  <Text style={{fontWeight: "bold", color: "black", fontSize: 35, paddingBottom:20}}>Nuevo Grupo</Text>
+                  <Input
+                      autoCorrect={false}
+                      placeholder="Ingrese el nombre"
+                      style={styles.text}
+                      onChangeText={(text) => this.setState({newGroup:text})}
+                  />
+
+                  <Button onPress={() => {
+                     this.toggleModal(!this.state.modalVisible)}}>
+                     <Text>Agregar</Text>
+                  </Button>
+
+                  <Button style={{position: "absolute", left:230, top:"112%"}} onPress={() => {
+                     this.toggleModal(!this.state.modalVisible)}}>
+                     <Text>Cerrar</Text>
+                  </Button>
+               </View>
+          </Modal>
+
         <Image source={require('./../img/fondo.jpg')} style={styles.fondo}/>
-        <Image source={require('./../img/agregar.png')} style={styles.agregar}/>
+
+        <TouchableOpacity onPress = {() => {this.toggleModal(true)}}>
+            <Image style={styles.agregar} source={require('./../img/agregar.png')}/>
+        </TouchableOpacity>
+
         <Content>
             <Text style={styles.titulo}>{"Grupos"}</Text>
             <List style={{marginRight:17}}>
@@ -152,18 +184,19 @@ const styles = StyleSheet.create({
     marginRight: 15,
     marginBottom:15,
   },
-  modal:{
-    width, 
-    height
-  },
+  modal: {
+      flex: 1,
+      alignItems: 'center',
+      backgroundColor: '#F5FCFF',
+      padding:100
+   },
   agregar:{
     height:70,
     width:70,
-    position:'absolute', 
-    right:10, 
-    top: height*0.75
+    left: "80%",
+    position: "relative"
   }
 
 });
 
-export default MapScreen;
+export default GroupsScreen;
