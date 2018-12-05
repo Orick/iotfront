@@ -14,7 +14,10 @@ class GroupsScreen extends Component {
       groupSelect : -1,
       showModal: false,
       modalVisible: false,
+      modalVisible2: false,
       newGroup: "",
+      newFriend: "",
+      currentGroup: -1
     };
     this.modalibeacon = this.modalibeacon.bind(this);
     this.groupsList = this.groupsList.bind(this);
@@ -88,7 +91,7 @@ class GroupsScreen extends Component {
                   <TouchableOpacity onPress={ () => { console.log("aa", data.id); this.modalibeacon(data.id) }} style={{marginRight:5}}>
                       <Image source={require('./../img/mapicon.png')} style={{height:40,width:40}}/>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={ () => { console.log("bb", data.id); }}>
+                  <TouchableOpacity onPress={ () => { this.toggleModal2(true, data.id) }}>
                       <Image source={require('./../img/config.png')} style={{height:40,width:40}}/>
                   </TouchableOpacity>
                 </View>
@@ -111,6 +114,26 @@ class GroupsScreen extends Component {
   toggleModal(visible) {
       this.setState({ modalVisible: visible });
   }
+
+  toggleModal2(visible, currentGroup2) {
+      this.setState({ modalVisible2: visible, currentGroup: currentGroup2 });
+  }
+
+  AsignarPersona() {
+    fetch('http://142.93.125.238:90/groups/asing',{
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: "idgroup="+this.state.currentGroup+"&emailToAsing="+this.state.newFriend
+        })
+        .then(response => response.json())
+        .then(result => {
+          alert(result.description)
+        })
+        .catch( error => {
+            console.log("fetch error : ", error);
+            return [];
+        });
+}
 
   newGroup() {
     firebase.auth().onAuthStateChanged((user) => {
@@ -166,7 +189,7 @@ class GroupsScreen extends Component {
   render() {
     return (
       <Container>
-        <Modal animationType = {"slide"} transparent = {false}
+        <Modal className="modalcreargrupo" animationType = {"slide"} transparent = {false}
                visible = {this.state.modalVisible}
                onRequestClose = {() => { console.log("Modal has been closed.") } }>
 
@@ -190,7 +213,33 @@ class GroupsScreen extends Component {
                     </Button>
                   </View>
                </View>
-          </Modal>
+        </Modal>
+
+        <Modal className="modalasociarpersona" animationType = {"slide"} transparent = {false}
+               visible = {this.state.modalVisible2}
+               onRequestClose = {() => { console.log("Modal has been closed.") } }>
+
+               <View style = {styles.modal}>
+                  <Text style={{fontWeight: "bold", color: "black", fontSize: 30, paddingBottom:20}}>Asociar Amigo</Text>
+                  <Input
+                      autoCorrect={false}
+                      placeholder="Ingrese email del amigo"
+                      style={styles.text}
+                      onChangeText={(text) => this.setState({newFriend:text})}
+                  />
+
+                  <View style={{flexDirection:'row'}}>
+                    <Button onPress={() => this.AsignarPersona()}>
+                       <Text>Agregar</Text>
+                    </Button>
+
+                    <Button style={{marginLeft:15}} onPress={() => {
+                       this.toggleModal2(!this.state.modalVisible2)}}>
+                       <Text>Cerrar</Text>
+                    </Button>
+                  </View>
+               </View>
+        </Modal>
 
         <Image source={require('./../img/fondo.jpg')} style={styles.fondo}/>
 
@@ -199,7 +248,7 @@ class GroupsScreen extends Component {
             <List style={{marginRight:17}}>
               {this.cardlist()}
             </List>
-            <Modal visible={this.state.showModal} onRequestClose={()=> this.closeModal()}>
+            <Modal animationType = {"slide"} visible={this.state.showModal} onRequestClose={()=> this.closeModal()}>
               <IbeaconMap groupid={this.state.groupSelect}/>
             </Modal>
         </Content>

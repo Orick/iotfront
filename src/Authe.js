@@ -19,7 +19,7 @@ class AuthLoadingScreen extends React.Component {
         // screen will be unmounted and thrown away.
 
         //CHANGE HOME FOR Auth
-        this.props.navigation.navigate(userToken ? 'App' : 'Auth');
+        this.props.navigation.navigate(userToken ? 'App' : 'Home');
     };
 
     render() {
