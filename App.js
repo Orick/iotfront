@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { PermissionsAndroid, Platform } from 'react-native';
 import Authe from './src/Authe';
-import IbeaconMap from './components/IbeaconMap';
 export default class App extends Component {
 
   componentDidMount() {
