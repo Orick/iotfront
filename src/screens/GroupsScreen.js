@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, Image, Dimensions, Modal, TouchableOpacity } from 'react-native'
-import { Container, Content, Body, Text, Card, CardItem, List, ListItem, Form, Item, Input, Right, Button, View } from 'native-base';
+import { StyleSheet, Image, Dimensions, Modal, TouchableOpacity, View } from 'react-native'
+import { Container, Content, Body, Text, Card, CardItem, List, ListItem, Form, Item, Input, Right, Button } from 'native-base';
 import firebase from 'react-native-firebase';
 import IbeaconMap from '../../components/IbeaconMap';
 
@@ -20,7 +20,7 @@ class GroupsScreen extends Component {
     this.groupsList = this.groupsList.bind(this);
     this.cardlist = this.cardlist.bind(this);
     this.closeModal = this.closeModal.bind(this);
-
+    this.newGroup = this.newGroup.bind(this);
   }
   componentWillMount(){
     this.groupsList()
@@ -112,6 +112,57 @@ class GroupsScreen extends Component {
       this.setState({ modalVisible: visible });
   }
 
+  newGroup() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if(user){
+        user.getIdToken()
+          .then(Token => {
+              fetch('http://142.93.125.238:90/groups/create',{
+                      method: 'POST',
+                      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                      body: "token="+Token+"&nombre="+this.state.newGroup
+                  })
+                  .then(response => response.json())
+                  .then(result => {
+                    if (result.code === 1){
+                      fetch('http://142.93.125.238:90/place/asing',{
+                          method: 'POST',
+                          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                          body: "idgroup="+result.group.id+"&idplace=1"
+                      })
+                      .then(response2 => response2.json())
+                      .then(result2 => {
+                        if (result2.code === 1){
+                          alert('Grupo Creado!')
+                        }else{
+                          alert("Error, intenta de nuevo")
+                        }
+                      })
+                      .catch( error => {
+                          console.log("fetch error : ", error);
+                          return [];
+                      });
+                    }else{
+                      alert("Error, intenta de nuevo")
+                    }
+                  })
+                  .catch( error => {
+                      console.log("fetch error : ", error);
+                      return [];
+                  });
+
+          }).catch(function (error) {
+              console.log('error sacando token');
+              console.log('error: ', error);
+              return [];
+          });
+      }else{
+          console.log('No logeado');
+          return [];
+      }
+    });
+  }
+
   render() {
     return (
       <Container>
@@ -128,23 +179,20 @@ class GroupsScreen extends Component {
                       onChangeText={(text) => this.setState({newGroup:text})}
                   />
 
-                  <Button onPress={() => {
-                     this.toggleModal(!this.state.modalVisible)}}>
-                     <Text>Agregar</Text>
-                  </Button>
+                  <View style={{flexDirection:'row'}}>
+                    <Button onPress={() => this.newGroup()}>
+                       <Text>Agregar</Text>
+                    </Button>
 
-                  <Button style={{position: "absolute", left:230, top:"112%"}} onPress={() => {
-                     this.toggleModal(!this.state.modalVisible)}}>
-                     <Text>Cerrar</Text>
-                  </Button>
+                    <Button style={{marginLeft:15}} onPress={() => {
+                       this.toggleModal(!this.state.modalVisible)}}>
+                       <Text>Cerrar</Text>
+                    </Button>
+                  </View>
                </View>
           </Modal>
 
         <Image source={require('./../img/fondo.jpg')} style={styles.fondo}/>
-
-        <TouchableOpacity onPress = {() => {this.toggleModal(true)}}>
-            <Image style={styles.agregar} source={require('./../img/agregar.png')}/>
-        </TouchableOpacity>
 
         <Content>
             <Text style={styles.titulo}>{"Grupos"}</Text>
@@ -155,6 +203,10 @@ class GroupsScreen extends Component {
               <IbeaconMap groupid={this.state.groupSelect}/>
             </Modal>
         </Content>
+
+        <TouchableOpacity onPress = {() => {this.toggleModal(true)}}>
+            <Image style={styles.agregar} source={require('./../img/agregar.png')}/>
+        </TouchableOpacity>
       </Container>
     );
   }
@@ -193,8 +245,7 @@ const styles = StyleSheet.create({
   agregar:{
     height:70,
     width:70,
-    left: "80%",
-    position: "relative"
+    left:"80%"
   }
 
 });
