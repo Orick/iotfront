@@ -81,6 +81,7 @@ class IbeaconMap extends Component {
     } catch (err) {
       console.log(`Beacons ranging not started, error: ${error}`)
     }
+<<<<<<< HEAD
 
     DeviceEventEmitter.addListener('beaconsDidRange', (data) => {
       
@@ -91,6 +92,17 @@ class IbeaconMap extends Component {
         if(data.beacons.length > 0){
           if(!(countDatos < 2)){
 
+=======
+
+    DeviceEventEmitter.addListener('beaconsDidRange', (data) => {
+      
+// iBeacon 1 - 4b23a5e9-3351-437d-a339-739d4fb7b43d
+// iBeacon 2 - 04130c98-0b71-46e0-b430-d3696875f13e
+// iBeacon 3 - 83b3730e-a173-446e-a4b0-f77aa6b85556
+      if(data.beacons){
+        if(data.beacons.length > 0){
+          if(!(countDatos < 5)){
+>>>>>>> f098d6f9374e1b012ff4d97bdc6541e120c660f9
               data.beacons.map((ibeaconData) => {
                 
                 if(ibeacon[ibeaconData.uuid]){
@@ -340,7 +352,11 @@ class IbeaconMap extends Component {
       return groups.map((dataGroups, index) => {
         if(dataGroups.position){
           if(dataGroups.position.distancia){
+<<<<<<< HEAD
             let d = ((dataGroups.position.distancia*2)*(width*0.9))/14.19;
+=======
+            let d = ((dataGroups.position.distancia*2)*(width*0.9))/13.1064;
+>>>>>>> f098d6f9374e1b012ff4d97bdc6541e120c660f9
             if(dataGroups.position.ibeaconId == '4b23a5e9-3351-437d-a339-739d4fb7b43d'){ poss_beacon_x = 50; poss_beacon_y = 90;   }
             if(dataGroups.position.ibeaconId == '04130c98-0b71-46e0-b430-d3696875f13e'){ poss_beacon_x = 195; poss_beacon_y = 90;  }
             if(dataGroups.position.ibeaconId == '83b3730e-a173-446e-a4b0-f77aa6b85556'){ poss_beacon_x = 100; poss_beacon_y = 252; }
@@ -508,7 +524,10 @@ class IbeaconMap extends Component {
       
         <View style={styles.bluetooth}>
             <TouchableOpacity onPress={ ()=> this.toggleBluetooth() }>
+<<<<<<< HEAD
             
+=======
+>>>>>>> f098d6f9374e1b012ff4d97bdc6541e120c660f9
                 <Image source={blueicon} style={{height:70,width:70}}/>
             </TouchableOpacity>
         </View>
@@ -561,7 +580,7 @@ const styles = StyleSheet.create({
     height:55,
     width:55,
     position:'absolute', 
-    right:10, 
+    right:20, 
     top: height*0.8
   },
   picker:{

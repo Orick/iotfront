@@ -164,15 +164,15 @@ class Login extends Component {
                     <Text>Recordar Contraseña</Text>
                 </Button>
             </Content>
-            <Button onPress={() => {this.desLogear()} }>
-            <Text>Deslogear</Text>
-            </Button>
         </Content>
     </Container>
     );
   }
 }
 
+{/* <Button onPress={() => {this.desLogear()} }>
+<Text>Deslogear</Text>
+</Button> */}
 
 {/* <Modal
           animationType="slide"
